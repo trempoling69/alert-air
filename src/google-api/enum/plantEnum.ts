@@ -1,0 +1,17 @@
+export enum PlantEnum {
+  ALDER = 'Aulne',
+  ASH = 'Frêne',
+  BIRCH = 'Bouleau',
+  COTTONWOOD = 'Peuplier',
+  ELM = 'Orme',
+  MAPLE = 'Erable',
+  OLIVE = 'Olivier',
+  JUNIPER = 'Genévrier',
+  OAK = 'Chêne',
+  PINE = 'Pin',
+  CYPRESS_PINE = 'Cyprès',
+  HAZEL = 'Noisetier',
+  GRAMINALES = 'Graminées',
+  RAGWEED = 'Ambroisie ',
+  MUGWORT = 'Armoise',
+}
