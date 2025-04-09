@@ -17,8 +17,6 @@ export class PollenBulletinController {
     const startDate = startDateParam ? new Date(startDateParam) : null;
     const endDate = endDateParam ? new Date(endDateParam) : null;
     const designation = designationParam ? PlantEnum[designationParam] : null;
-    console.log(designation);
-    console.log(designationParam);
 
     return this.pollenBulletinService.findAll({
       startDate,

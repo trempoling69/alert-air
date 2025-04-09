@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { PollenBulletinModule } from './pollen-bulletin/pollen-bulletin.module';
 import { GoogleApiModule } from './google-api/google-api.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MeteoObservationLyonModule } from './meteo-observation-lyon/meteo-observation-lyon.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     DatabaseModule,
     PollenBulletinModule,
     GoogleApiModule,
+    MeteoObservationLyonModule,
   ],
   controllers: [AppController],
   providers: [
