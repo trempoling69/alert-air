@@ -10,6 +10,7 @@ import { GoogleApiModule } from './google-api/google-api.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MeteoObservationLyonModule } from './meteo-observation-lyon/meteo-observation-lyon.module';
 import { PollutionDataModule } from './pollution-data/pollution-data.module';
+import { AtmoApiServiceModule } from './atmo-api-service/atmo-api-service.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { PollutionDataModule } from './pollution-data/pollution-data.module';
     GoogleApiModule,
     MeteoObservationLyonModule,
     PollutionDataModule,
+    AtmoApiServiceModule,
   ],
   controllers: [AppController],
   providers: [

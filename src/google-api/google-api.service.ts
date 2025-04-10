@@ -3,7 +3,6 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 import { PlantEnum } from './enum/plantEnum';
-import { UnitEnum } from './enum/unitEnum';
 
 @Injectable()
 export class GoogleApiService {
@@ -41,50 +40,39 @@ export class GoogleApiService {
     }
   }
 
-  async fetchAirQuality() {
-    try {
-      return firstValueFrom(
-        this.httpService.post(
-          `https://airquality.googleapis.com/v1/currentConditions:lookup?key=${this.configService.get('GOOGLE_API_KEY')}`,
-          {
-            universalAqi: true,
-            location: {
-              latitude: 45.742648,
-              longitude: 4.820659,
-            },
-            extraComputations: [
-              'DOMINANT_POLLUTANT_CONCENTRATION',
-              'POLLUTANT_CONCENTRATION',
-              'LOCAL_AQI',
-            ],
-            languageCode: 'fr',
-          },
-        ),
-      );
-    } catch (err) {
-      console.log(err);
-      this.logger.error(`Failed to call google api`, err.message);
-      throw new HttpException('Fail google', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+  // async fetchAirQuality({ date }: { date: string }) {
+  //   try {
+  //     return firstValueFrom(
+  //       this.httpService.get(
+  //         `https://api.atmo-aura.fr/api/v1/communes/69123/indices/atmo?api_token=${this.configService.get('ATMO_API_KEY')}&date_calcul=${date}`,
+  //       ),
+  //     );
+  //   } catch (err) {
+  //     console.log(err);
+  //     this.logger.error(`Failed to call google api`, err.message);
+  //     throw new HttpException('Fail google', HttpStatus.INTERNAL_SERVER_ERROR);
+  //   }
+  // }
 
-  async parseAirQuality() {
-    const data = await this.fetchAirQuality();
-    const date = new Date();
-    const polluants = data.data.pollutants;
+  // async parseAirQuality() {
+  //   const data = await this.fetchAirQuality({ date: 'now' });
+  //   const date = new Date();
+  //   const polluants = data.data.data;
 
-    return polluants.map((polluant) => {
-      return {
-        date,
-        valeur: polluant.concentration.value,
-        code_polluant: polluant.code,
-        label_polluant: polluant.fullName,
-        label_court_polluant: polluant.displayName,
-        unite: UnitEnum[polluant.concentration.units],
-        label_unite: polluant.concentration.units,
-      };
-    });
-  }
+  //   return polluants.map((polluant) => {
+  //     return {
+  //       date,
+  //       validation: data.data.success,
+  //       type_appareil_label: 'Analyseur Air',
+  //       valeur: polluant.indice,
+  //       code_polluant: polluant.code,
+  //       label_polluant: polluant.fullName,
+  //       label_court_polluant: polluant.displayName,
+  //       unite: UnitEnum[polluant.concentration.units],
+  //       label_unite: polluant.concentration.units,
+  //     };
+  //   });
+  // }
 
   async parseMeteoData() {
     const data = await this.fetchTodayMeteo();
@@ -104,7 +92,8 @@ export class GoogleApiService {
         precipitation_mm,
         temperature_min: info.minTemperature.degrees,
         temperature_max: info.maxTemperature.degrees,
-        temperature_moy: null,
+        temperature_moy:
+          (info.minTemperature.degrees + info.maxTemperature.degrees) / 2,
         vent_moyen: wind,
       };
     });

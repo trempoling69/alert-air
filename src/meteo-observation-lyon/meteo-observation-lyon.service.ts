@@ -31,6 +31,11 @@ export class MeteoObservationLyonService {
     return this.meteoObservationLyonModel.findAll({ where: whereClause });
   }
 
+  async populateDev() {
+    const arrayOfData = await this.googleApiService.parseMeteoData();
+    return this.meteoObservationLyonModel.bulkCreate(arrayOfData);
+  }
+
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async populateMeteo() {
     const arrayOfData = await this.googleApiService.parseMeteoData();

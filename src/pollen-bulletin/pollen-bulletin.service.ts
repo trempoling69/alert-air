@@ -57,6 +57,11 @@ export class PollenBulletinService {
     return `This action removes a #${id} pollenBulletin`;
   }
 
+  async populateDev() {
+    const arrayOfData = await this.googleApiService.parseData();
+    return this.pollenBulletinModel.bulkCreate(arrayOfData);
+  }
+
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async populateNewBulletin() {
     const arrayOfData = await this.googleApiService.parseData();

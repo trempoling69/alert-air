@@ -9,9 +9,11 @@ export class PollutionDataController {
   findAll(
     @Query('startDate') startDateParam: string | undefined,
     @Query('endDate') endDateParam: string | undefined,
+    @Query('type') typeParam: string | undefined,
   ) {
     const startDate = startDateParam ? new Date(startDateParam) : null;
     const endDate = endDateParam ? new Date(endDateParam) : null;
-    return this.pollutionDataService.findAll({ startDate, endDate });
+    const type = typeParam ? typeParam : null;
+    return this.pollutionDataService.findAll({ startDate, endDate, type });
   }
 }
