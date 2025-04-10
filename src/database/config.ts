@@ -3,6 +3,7 @@ import { SequelizeModuleOptions } from '@nestjs/sequelize';
 import { Dialect } from 'sequelize';
 import { MeteoObservationLyon } from 'src/meteo-observation-lyon/entities/meteo-observation-lyon.entity';
 import { PollenBulletin } from 'src/pollen-bulletin/entities/pollen-bulletin.entity';
+import { PollutionData } from 'src/pollution-data/entities/pollution-data.entity';
 
 export default (configService: ConfigService): SequelizeModuleOptions => {
   return {
@@ -13,7 +14,7 @@ export default (configService: ConfigService): SequelizeModuleOptions => {
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_DATABASE'),
-    models: [PollenBulletin, MeteoObservationLyon],
+    models: [PollenBulletin, MeteoObservationLyon, PollutionData],
     autoLoadModels: true,
     synchronize: false,
   };

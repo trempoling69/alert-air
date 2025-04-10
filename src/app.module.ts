@@ -9,6 +9,7 @@ import { PollenBulletinModule } from './pollen-bulletin/pollen-bulletin.module';
 import { GoogleApiModule } from './google-api/google-api.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MeteoObservationLyonModule } from './meteo-observation-lyon/meteo-observation-lyon.module';
+import { PollutionDataModule } from './pollution-data/pollution-data.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { MeteoObservationLyonModule } from './meteo-observation-lyon/meteo-obser
     PollenBulletinModule,
     GoogleApiModule,
     MeteoObservationLyonModule,
+    PollutionDataModule,
   ],
   controllers: [AppController],
   providers: [
