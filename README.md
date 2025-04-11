@@ -1,99 +1,189 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🌍 API Conseil sur l'air à lyon – Documentation
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Cette API regroupe des services liés à l'environnement, la qualité de l'air, la météo et le pollen. Elle centralise les appels aux services externes (Google, Atmo, Meersens) et expose des routes pour consulter ou enrichir les données en base.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🔌 Services intégrés
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 🔹 `GoogleService`
 
-## Project setup
+Ce service permet de communiquer avec l’API Google pour récupérer **les données météo en temps réel**.  
+Utilisé principalement pour enrichir la base avec les conditions météorologiques quotidiennes.
 
-```bash
-$ npm install
+---
+
+### 🔹 `AtmoService`
+
+Ce service interagit avec l’API Atmo afin de **collecter les données de pollution de l’air**.  
+Il permet d’obtenir les concentrations de différents polluants (CO, NO2, O3, etc.) avec leurs unités.
+
+---
+
+### 🔹 `MeersensService`
+
+Ce service appelle l’API Meersens pour **récupérer en direct les données de pollen**.  
+Chaque type de pollen est accompagné d’un seuil de concentration.
+
+---
+
+## 📡 Routes exposées
+
+---
+
+### `GET /meteo-observation-lyon`
+
+#### Description :
+
+Récupère toutes les données météo stockées dans la base.
+
+#### Query Params (facultatifs) :
+
+| Paramètre   | Type     | Description                                  |
+| ----------- | -------- | -------------------------------------------- |
+| `startDate` | `string` | Date de début au format ISO (ex: 2024-04-01) |
+| `endDate`   | `string` | Date de fin au format ISO                    |
+
+#### Exemple :
+
+```
+GET /meteo-observation-lyon?startDate=2025-04-01&endDate=2025-04-10
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+### `GET /pollen-bulletin`
 
-# watch mode
-$ npm run start:dev
+#### Description :
 
-# production mode
-$ npm run start:prod
+Retourne les données de pollen enregistrées en base.
+
+#### Query Params (facultatifs) :
+
+| Paramètre     | Type     | Description             |
+| ------------- | -------- | ----------------------- |
+| `startDate`   | `string` | Date de début (ISO)     |
+| `endDate`     | `string` | Date de fin (ISO)       |
+| `designation` | `string` | Nom du pollen à filtrer |
+
+Les designations sont basé sur cette enumération :
+
+```js
+{
+  ALDER = 'Aulne',
+  ASH = 'Frêne',
+  BIRCH = 'Bouleau',
+  COTTONWOOD = 'Peuplier',
+  ELM = 'Orme',
+  MAPLE = 'Erable',
+  OLIVE = 'Olivier',
+  JUNIPER = 'Genévrier',
+  OAK = 'Chêne',
+  PINE = 'Pin',
+  CYPRESS_PINE = 'Cyprès',
+  HAZEL = 'Noisetier',
+  GRAMINALES = 'Graminées',
+  RAGWEED = 'Ambroisie ',
+  MUGWORT = 'Armoise',
+}
 ```
 
-## Run tests
+#### Exemple :
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+GET /pollen-bulletin?startDate=2025-04-01&designation=BIRCH
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### `GET /pollution-data`
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+#### Description :
 
-```bash
-$ npm install -g mau
-$ mau deploy
+Renvoie les données de pollution de l’air présentes en base.
+
+#### Query Params (facultatifs) :
+
+| Paramètre   | Type     | Description                |
+| ----------- | -------- | -------------------------- |
+| `startDate` | `string` | Date de début (ISO)        |
+| `endDate`   | `string` | Date de fin (ISO)          |
+| `type`      | `string` | Code du polluant à filtrer |
+
+Code polluant principaux :
+| Polluant | Code |
+|----------|------|
+| NO | 02 |
+| PM10 | 24 |
+| PM2.5 | 39 |
+| NO2 | 03 |
+| CO | 04 |
+| BC | G6 |
+| Plomb | 19 |
+
+#### Exemple :
+
+```
+GET /pollution-data?type=03&startDate=2025-04-01
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+### `GET /info-message`
 
-Check out a few resources that may come in handy when working with NestJS:
+#### Description :
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Cette route retourne un **message de recommandation personnalisé** pour chaque type de pollen.  
+Les recommandations sont basées sur :
 
-## Support
+- la quantité de pollen détectée,
+- les conditions météo actuelles.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Exemple :
 
-## Stay in touch
+```
+GET /info-message
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+#### Réponse possible :
 
-## License
+```json
+[
+  {
+    "date": "aujourd’hui",
+    "designation": "Aulne",
+    "quantite": 0.09,
+    "vent_moyen": 5.5,
+    "precipitation_mm": 0,
+    "temperature_moy": 13,
+    "messages": ["Aucun facteur aggravant détecté aujourd’hui."]
+  },
+  {
+    "date": "aujourd’hui",
+    "designation": "Bouleau",
+    "quantite": 63.94,
+    "vent_moyen": 5.5,
+    "precipitation_mm": 0,
+    "temperature_moy": 13,
+    "messages": [
+      "Le taux de pollen est élevé, attention aux réactions allergiques possibles."
+    ]
+  }
+]
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## ⏰ Mise à jour des données
+
+### 🔹 `Meteo`
+
+Les données météo sont mise à jour tous les jours à minuit via une tache CRON qui fetch l'api de google et insère dans la base des donnéees les informations
+
+### 🔹 `Pollen`
+
+Les données de pollen sont mise à jour tous les jours à minuit pas une tache CRON qui fetch l'api de Meersens et insère les données en base de données
+
+### 🔹 `Pollution`
+
+Les données pollution sont mise à jour via l'api Atmo qui est fetch tous les jours à minuit via une tache CRON et qui insère les éléments en base de données
