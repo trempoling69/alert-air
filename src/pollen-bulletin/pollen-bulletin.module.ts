@@ -3,10 +3,9 @@ import { PollenBulletinService } from './pollen-bulletin.service';
 import { PollenBulletinController } from './pollen-bulletin.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { PollenBulletin } from './entities/pollen-bulletin.entity';
-import { GoogleApiModule } from 'src/google-api/google-api.module';
-
+import { MeersensApiModule } from 'src/meersens-api/meersens-api.module';
 @Module({
-  imports: [SequelizeModule.forFeature([PollenBulletin]), GoogleApiModule],
+  imports: [SequelizeModule.forFeature([PollenBulletin]), MeersensApiModule],
   controllers: [PollenBulletinController],
   providers: [PollenBulletinService],
   exports: [PollenBulletinService],

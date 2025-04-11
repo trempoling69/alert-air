@@ -4,16 +4,16 @@ import { UpdatePollenBulletinDto } from './dto/update-pollen-bulletin.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { PollenBulletin } from './entities/pollen-bulletin.entity';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { GoogleApiService } from 'src/google-api/google-api.service';
 import { WhereOptions } from 'sequelize';
 import { Op } from 'sequelize';
+import { MeersensApiService } from 'src/meersens-api/meersens-api.service';
 
 @Injectable()
 export class PollenBulletinService {
   constructor(
     @InjectModel(PollenBulletin)
     private readonly pollenBulletinModel: typeof PollenBulletin,
-    private readonly googleApiService: GoogleApiService,
+    private readonly meersensApiService: MeersensApiService,
   ) {}
 
   create(createPollenBulletinDto: CreatePollenBulletinDto) {
@@ -23,7 +23,7 @@ export class PollenBulletinService {
   findAll(params?: {
     startDate: Date | null;
     endDate: Date | null;
-    designation: string;
+    designation: string | null;
   }) {
     const whereClause: WhereOptions<PollenBulletin> = {};
     if (params) {
@@ -58,13 +58,13 @@ export class PollenBulletinService {
   }
 
   async populateDev() {
-    const arrayOfData = await this.googleApiService.parseData();
+    const arrayOfData = await this.meersensApiService.parsePollen();
     return this.pollenBulletinModel.bulkCreate(arrayOfData);
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async populateNewBulletin() {
-    const arrayOfData = await this.googleApiService.parseData();
+    const arrayOfData = await this.meersensApiService.parsePollen();
     await this.pollenBulletinModel.bulkCreate(arrayOfData);
   }
 }

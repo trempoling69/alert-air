@@ -26,6 +26,7 @@ export class GoogleApiService {
       throw new HttpException('Fail google', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
   async fetchTodayMeteo() {
     try {
       return firstValueFrom(
@@ -39,40 +40,6 @@ export class GoogleApiService {
       throw new HttpException('Fail google', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
-  // async fetchAirQuality({ date }: { date: string }) {
-  //   try {
-  //     return firstValueFrom(
-  //       this.httpService.get(
-  //         `https://api.atmo-aura.fr/api/v1/communes/69123/indices/atmo?api_token=${this.configService.get('ATMO_API_KEY')}&date_calcul=${date}`,
-  //       ),
-  //     );
-  //   } catch (err) {
-  //     console.log(err);
-  //     this.logger.error(`Failed to call google api`, err.message);
-  //     throw new HttpException('Fail google', HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
-
-  // async parseAirQuality() {
-  //   const data = await this.fetchAirQuality({ date: 'now' });
-  //   const date = new Date();
-  //   const polluants = data.data.data;
-
-  //   return polluants.map((polluant) => {
-  //     return {
-  //       date,
-  //       validation: data.data.success,
-  //       type_appareil_label: 'Analyseur Air',
-  //       valeur: polluant.indice,
-  //       code_polluant: polluant.code,
-  //       label_polluant: polluant.fullName,
-  //       label_court_polluant: polluant.displayName,
-  //       unite: UnitEnum[polluant.concentration.units],
-  //       label_unite: polluant.concentration.units,
-  //     };
-  //   });
-  // }
 
   async parseMeteoData() {
     const data = await this.fetchTodayMeteo();
